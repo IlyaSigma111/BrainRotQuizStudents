@@ -1,0 +1,549 @@
+/* Стили для мобильных устройств */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: #333;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Общие стили экранов */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* Карточки */
+.connect-card, .waiting-card, .question-card, .result-card, .final-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Экран входа */
+.connect-card {
+    text-align: center;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo i {
+    font-size: 48px;
+    color: #4facfe;
+    margin-bottom: 10px;
+}
+
+.logo h1 {
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.connect-form h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #4facfe;
+}
+
+.quick-tips {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.quick-tips p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quick-tips i {
+    color: #4facfe;
+}
+
+.demo-note {
+    margin-top: 15px;
+    padding: 10px;
+    background: #fff3cd;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #856404;
+}
+
+/* Кнопки */
+.btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.btn-large {
+    padding: 18px;
+    font-size: 18px;
+}
+
+/* Экран ожидания */
+.waiting-content {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.spinner {
+    font-size: 48px;
+    color: #4facfe;
+    margin-bottom: 20px;
+}
+
+.waiting-content h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.waiting-content p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.game-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.game-info p {
+    margin: 8px 0;
+}
+
+.players-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #e7f5ff;
+    padding: 12px;
+    border-radius: 10px;
+    color: #1971c2;
+}
+
+/* Игровой экран */
+.game-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.game-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.question-number {
+    font-weight: 600;
+    color: #333;
+}
+
+.game-timer {
+    background: #ff6b6b;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-score {
+    background: #4facfe;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Вопрос */
+.question-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.question-category {
+    background: #4facfe;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.question-text {
+    font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.question-hint {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #856404;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.question-hint i {
+    color: #ffc107;
+}
+
+/* Варианты ответов */
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.option {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.option:hover {
+    border-color: #4facfe;
+    background: #e7f5ff;
+    transform: translateY(-2px);
+}
+
+.option.selected {
+    border-color: #4facfe;
+    background: #e7f5ff;
+}
+
+.option-letter {
+    background: #4facfe;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.option-text {
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+/* Обратная связь */
+.answer-feedback {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    display: none;
+}
+
+.feedback-correct {
+    background: rgba(46, 204, 113, 0.1);
+    border: 2px solid #2ecc71;
+    color: #27ae60;
+}
+
+.feedback-wrong {
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid #e74c3c;
+    color: #c0392b;
+}
+
+.feedback-timeout {
+    background: rgba(52, 152, 219, 0.1);
+    border: 2px solid #3498db;
+    color: #2980b9;
+}
+
+/* Экран результата */
+.result-content {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.answer-result {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.result-correct {
+    background: rgba(46, 204, 113, 0.1);
+    color: #27ae60;
+}
+
+.result-wrong {
+    background: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+}
+
+.score-update {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.score-change {
+    font-size: 32px;
+    font-weight: 800;
+    color: #4facfe;
+    margin-bottom: 10px;
+}
+
+.total-score {
+    font-size: 18px;
+    color: #333;
+}
+
+.next-waiting {
+    color: #666;
+    margin-top: 20px;
+}
+
+.next-waiting i {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Финальный экран */
+.final-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.trophy {
+    font-size: 48px;
+    color: gold;
+    margin-bottom: 15px;
+}
+
+.final-score {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.score-display {
+    margin-bottom: 20px;
+}
+
+.score-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: #4facfe;
+    display: block;
+}
+
+.score-label {
+    font-size: 16px;
+    color: #666;
+}
+
+.final-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.final-leaderboard {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.final-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.final-actions .btn {
+    flex: 1;
+}
+
+/* Адаптация для очень маленьких экранов */
+@media (max-width: 400px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .connect-card, .waiting-card, .question-card, .result-card, .final-card {
+        padding: 20px;
+    }
+    
+    .question-text {
+        font-size: 18px;
+    }
+    
+    .option {
+        padding: 15px;
+    }
+    
+    .option-letter {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .final-actions {
+        flex-direction: column;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.screen.active {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.game-timer {
+    animation: pulse 1s infinite;
+}
