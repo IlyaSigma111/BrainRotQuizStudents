@@ -1,4 +1,4 @@
-// Скрипт для учеников - полная версия
+// Скрипт для учеников - ИСПРАВЛЕННАЯ ВЕРСИЯ
 document.addEventListener('DOMContentLoaded', function() {
     // Элементы DOM
     const screens = {
@@ -50,18 +50,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let timerInterval;
     let timeLeft = 30;
     
-    // Инициализация
+    // === ИНИЦИАЛИЗАЦИЯ ===
     function init() {
         console.log('Инициализация ученического интерфейса...');
         
+        // Инициализация Firebase
         try {
-            // Инициализация Firebase
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            console.log('Firebase подключен');
+            console.log('✅ Firebase подключен');
         } catch (error) {
-            console.error('Ошибка Firebase:', error);
+            console.error('❌ Ошибка Firebase:', error);
+            alert('⚠️ Ошибка подключения к базе данных. Проверьте интернет.');
         }
+        
+        // Автозаполнение для теста
+        gameCodeInput.value = '1234';
+        playerNameInput.value = 'Ученик' + Math.floor(Math.random() * 1000);
         
         // Привязка обработчиков событий
         joinBtn.addEventListener('click', handleJoinGame);
@@ -84,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
             switchScreen('connect');
         });
         
-        console.log('Инициализация завершена');
+        console.log('✅ Инициализация завершена');
     }
     
     // === ВХОД В ИГРУ ===
@@ -92,20 +97,26 @@ document.addEventListener('DOMContentLoaded', function() {
         gameCode = gameCodeInput.value.trim();
         playerName = playerNameInput.value.trim() || 'Ученик';
         
-        console.log('Попытка входа:', { gameCode, playerName });
+        console.log('🔄 Попытка входа:', { gameCode, playerName });
         
         // Валидация
         if (!gameCode || gameCode.length !== 4 || !/^\d+$/.test(gameCode)) {
-            alert('Введите корректный 4-значный код игры (только цифры)');
+            alert('⚠️ Введите корректный 4-значный код игры (только цифры)');
             gameCodeInput.focus();
             gameCodeInput.select();
             return;
         }
         
         if (!playerName) {
-            alert('Введите ваше имя');
+            alert('⚠️ Введите ваше имя');
             playerNameInput.focus();
             playerNameInput.select();
+            return;
+        }
+        
+        // Проверяем Firebase
+        if (!database) {
+            alert('❌ Firebase не подключен. Обновите страницу.');
             return;
         }
         
@@ -116,18 +127,22 @@ document.addEventListener('DOMContentLoaded', function() {
         // Проверяем существование игры
         gameRef = database.ref(`games/${gameCode}`);
         
+        console.log('🔍 Проверка игры с кодом:', gameCode);
+        
         gameRef.once('value')
             .then(snapshot => {
                 if (snapshot.exists()) {
-                    console.log('Игра найдена, подключаемся...');
+                    console.log('✅ Игра найдена');
                     return connectToGame(snapshot.val());
                 } else {
-                    throw new Error('Игра с таким кодом не найдена');
+                    throw new Error('❌ Игра с таким кодом не найдена. Проверьте код или попросите учителя создать игру.');
                 }
             })
             .catch(error => {
-                console.error('Ошибка подключения:', error);
-                alert('Ошибка: ' + error.message);
+                console.error('❌ Ошибка подключения:', error);
+                alert(error.message || 'Ошибка подключения к игре');
+                
+                // Восстанавливаем кнопку
                 joinBtn.disabled = false;
                 joinBtn.innerHTML = '<i class="fas fa-play"></i> Присоединиться';
             });
@@ -138,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         playerRef = gameRef.child(`players/${playerId}`);
         
-        console.log('Подключение как игрок:', playerId);
+        console.log('👤 Подключение как игрок:', playerId);
         
         // Сохраняем игрока в Firebase
         return playerRef.set({
@@ -149,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
             joinedAt: firebase.database.ServerValue.TIMESTAMP,
             lastAnswer: -1
         }).then(() => {
-            console.log('Игрок сохранен в Firebase');
+            console.log('✅ Игрок сохранен в Firebase');
             
             // Обновляем UI
             connectedCodeSpan.textContent = gameCode;
@@ -165,6 +180,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Восстанавливаем кнопку
             joinBtn.disabled = false;
             joinBtn.innerHTML = '<i class="fas fa-play"></i> Присоединиться';
+            
+            alert('✅ Вы успешно подключились к игре! Ожидайте начала.');
+        }).catch(error => {
+            console.error('❌ Ошибка сохранения игрока:', error);
+            throw new Error('Не удалось подключиться к игре: ' + error.message);
         });
     }
     
@@ -181,20 +201,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        console.log('Слушатели игры установлены');
+        console.log('👂 Слушатели игры установлены');
     }
     
     function handleGameUpdate(snapshot) {
         const gameData = snapshot.val();
         if (!gameData) {
-            console.log('Игра удалена или не найдена');
+            console.log('❌ Игра удалена или не найдена');
+            alert('Игра была удалена учителем');
+            switchScreen('connect');
             return;
         }
         
         const state = gameData.state || 'waiting';
         currentQuestionIndex = gameData.currentQuestion || 0;
         
-        console.log('Обновление состояния игры:', state, 'вопрос:', currentQuestionIndex);
+        console.log('🔄 Обновление состояния игры:', state, 'вопрос:', currentQuestionIndex);
         
         // Обновляем информацию
         if (gameData.totalQuestions) {
@@ -226,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function switchScreen(screenName) {
-        console.log('Переключение на экран:', screenName);
+        console.log('🔄 Переключение на экран:', screenName);
         
         // Скрываем все экраны
         Object.values(screens).forEach(screen => {
@@ -243,13 +265,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function showQuestion(index) {
         if (!gameRef) return;
         
-        console.log('Показ вопроса:', index);
+        console.log('❓ Показ вопроса:', index);
         
         gameRef.child(`questions/${index}`).once('value')
             .then(snapshot => {
                 const question = snapshot.val();
                 if (!question) {
-                    console.error('Вопрос не найден:', index);
+                    console.error('❌ Вопрос не найден:', index);
                     return;
                 }
                 
@@ -267,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 feedbackDiv.classList.remove('show');
                 
             }).catch(error => {
-                console.error('Ошибка загрузки вопроса:', error);
+                console.error('❌ Ошибка загрузки вопроса:', error);
             });
     }
     
@@ -292,6 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (this.classList.contains('disabled')) return;
                 
                 const selectedIndex = parseInt(this.getAttribute('data-index'));
+                console.log('✅ Выбран ответ:', selectedIndex);
                 submitAnswer(selectedIndex);
                 
                 // Отключаем все варианты
@@ -329,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function handleTimeout() {
-        console.log('Время вышло');
+        console.log('⏰ Время вышло');
         
         // Отключаем все варианты
         const optionElements = optionsContainer.querySelectorAll('.option');
@@ -342,27 +365,33 @@ document.addEventListener('DOMContentLoaded', function() {
         showFeedback('timeout', -1, -1, 0);
         
         // Сохраняем "нет ответа"
-        playerRef.update({
-            [`answers/${currentQuestionIndex}`]: -1,
-            lastAnswer: currentQuestionIndex
-        });
+        if (playerRef) {
+            playerRef.update({
+                [`answers/${currentQuestionIndex}`]: -1,
+                lastAnswer: currentQuestionIndex
+            });
+        }
     }
     
     // === ОТПРАВКА ОТВЕТА ===
     function submitAnswer(answerIndex) {
         clearInterval(timerInterval);
         
-        console.log('Отправка ответа:', answerIndex);
+        console.log('📤 Отправка ответа:', answerIndex);
         
-        if (!gameRef) return;
+        if (!gameRef || !playerRef) return;
         
         // Получаем вопрос для проверки правильности
         gameRef.child(`questions/${currentQuestionIndex}`).once('value')
             .then(snapshot => {
                 const question = snapshot.val();
-                if (!question) return;
+                if (!question) {
+                    console.error('❌ Вопрос не найден');
+                    return;
+                }
                 
                 const isCorrect = answerIndex === question.correct;
+                console.log('✅ Ответ правильный?:', isCorrect);
                 
                 // Сохраняем ответ
                 playerRef.update({
@@ -374,10 +403,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Показываем обратную связь
                     showFeedback(isCorrect ? 'correct' : 'incorrect', answerIndex, question.correct, 0);
+                }).catch(error => {
+                    console.error('❌ Ошибка сохранения ответа:', error);
                 });
                 
             }).catch(error => {
-                console.error('Ошибка отправки ответа:', error);
+                console.error('❌ Ошибка загрузки вопроса:', error);
             });
     }
     
@@ -396,10 +427,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     playerData.score = (playerData.score || 0) + pointsEarned;
                     playerData.correct = (playerData.correct || 0) + 1;
+                    playerData.lastPoints = pointsEarned;
+                    
+                    console.log('💰 Начислено очков:', pointsEarned);
+                } else {
+                    playerData.lastPoints = 0;
                 }
-                
-                // Сохраняем очки за этот вопрос
-                playerData.lastPoints = pointsEarned;
             }
             return playerData;
         });
@@ -410,13 +443,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         switch(type) {
             case 'correct':
-                feedbackHtml = `
-                    <div class="feedback feedback-correct show">
-                        <h3><i class="fas fa-check-circle"></i> Правильно!</h3>
-                        <p>Отличный ответ!</p>
-                        <p>+${points || '???'} очков</p>
-                    </div>
-                `;
+                playerRef.once('value').then(snapshot => {
+                    const playerData = snapshot.val();
+                    const earnedPoints = playerData?.lastPoints || 100;
+                    
+                    feedbackHtml = `
+                        <div class="feedback feedback-correct show">
+                            <h3><i class="fas fa-check-circle"></i> Правильно!</h3>
+                            <p>Отличный ответ!</p>
+                            <p>+${earnedPoints} очков</p>
+                        </div>
+                    `;
+                    
+                    feedbackDiv.innerHTML = feedbackHtml;
+                    feedbackDiv.style.display = 'block';
+                });
                 break;
                 
             case 'incorrect':
@@ -427,6 +468,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p>Правильный ответ: ${correctLetter}</p>
                     </div>
                 `;
+                
+                feedbackDiv.innerHTML = feedbackHtml;
+                feedbackDiv.style.display = 'block';
                 break;
                 
             case 'timeout':
@@ -436,18 +480,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p>Вы не успели ответить</p>
                     </div>
                 `;
+                
+                feedbackDiv.innerHTML = feedbackHtml;
+                feedbackDiv.style.display = 'block';
                 break;
         }
-        
-        feedbackDiv.innerHTML = feedbackHtml;
-        feedbackDiv.style.display = 'block';
     }
     
     // === ПОКАЗ РЕЗУЛЬТАТА ===
     function showResult(questionIndex) {
         if (!playerRef) return;
         
-        console.log('Показ результата для вопроса:', questionIndex);
+        console.log('📊 Показ результата для вопроса:', questionIndex);
         
         playerRef.once('value')
             .then(snapshot => {
@@ -467,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
             })
             .catch(error => {
-                console.error('Ошибка показа результата:', error);
+                console.error('❌ Ошибка показа результата:', error);
             });
     }
     
@@ -508,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showFinalResults() {
         if (!playerRef || !gameRef) return;
         
-        console.log('Показ финальных результатов');
+        console.log('🏆 Показ финальных результатов');
         
         // Получаем данные игрока
         playerRef.once('value')
@@ -529,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Ошибка загрузки финальных результатов:', error);
+                console.error('❌ Ошибка загрузки финальных результатов:', error);
             });
     }
     
@@ -550,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayLeaderboard(sortedPlayers);
             })
             .catch(error => {
-                console.error('Ошибка загрузки лидерборда:', error);
+                console.error('❌ Ошибка загрузки лидерборда:', error);
             });
     }
     
