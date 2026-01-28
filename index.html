@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Quiz - Игрок</title>
+    <title>Brain Quiz - Ученик</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,48 +13,49 @@
 <body>
     <div class="container">
         <!-- Экран входа -->
-        <section id="connect-screen" class="screen active">
+        <div class="screen active" id="connect-screen">
             <div class="connect-card">
                 <div class="logo">
                     <i class="fas fa-brain"></i>
                     <h1>Brain Quiz</h1>
+                    <p class="subtitle">Ученический режим</p>
                 </div>
                 
                 <div class="connect-form">
-                    <h2>Присоединиться к игре</h2>
+                    <h2><i class="fas fa-sign-in-alt"></i> Вход в игру</h2>
                     
-                    <div class="input-group">
+                    <div class="form-group">
                         <label for="game-code">
                             <i class="fas fa-key"></i> Код игры:
                         </label>
-                        <input type="text" id="game-code" placeholder="Введите 4 цифры" maxlength="4">
+                        <input type="text" id="game-code" placeholder="Введите 4 цифры" maxlength="4" pattern="\d*">
+                        <div class="input-hint">Код покажет учитель на доске</div>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="form-group">
                         <label for="player-name">
                             <i class="fas fa-user"></i> Ваше имя:
                         </label>
                         <input type="text" id="player-name" placeholder="Как вас зовут?" maxlength="20">
                     </div>
                     
-                    <div class="quick-tips">
-                        <p><i class="fas fa-info-circle"></i> Код игры покажет учитель на доске</p>
-                        <p><i class="fas fa-qrcode"></i> Или отсканируйте QR-код с доски</p>
+                    <div class="demo-note">
+                        <p><i class="fas fa-info-circle"></i> Для теста используйте код: <strong>1234</strong></p>
                     </div>
                     
-                    <button class="btn btn-primary btn-large" id="join-game">
-                        <i class="fas fa-sign-in-alt"></i> Войти в игру
+                    <button class="btn btn-primary" id="join-btn">
+                        <i class="fas fa-play"></i> Присоединиться
                     </button>
                     
-                    <div class="demo-note">
-                        <p>Демо: попробуйте код <strong>1234</strong></p>
+                    <div class="qr-note">
+                        <p><i class="fas fa-qrcode"></i> Или отсканируйте QR-код с доски</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Экран ожидания -->
-        <section id="waiting-screen" class="screen">
+        <div class="screen" id="waiting-screen">
             <div class="waiting-card">
                 <div class="waiting-content">
                     <div class="spinner">
@@ -63,35 +64,50 @@
                     <h2>Ожидание начала игры</h2>
                     <p>Игра начнется, когда учитель нажмет "Старт"</p>
                     
-                    <div class="game-info">
-                        <p>Код игры: <strong id="connected-code">----</strong></p>
-                        <p>Вы: <strong id="connected-name">Игрок</strong></p>
+                    <div class="player-info">
+                        <div class="info-box">
+                            <div class="info-item">
+                                <i class="fas fa-key"></i>
+                                <span>Код игры: <strong id="connected-code">----</strong></span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-user"></i>
+                                <span>Вы: <strong id="connected-name">Игрок</strong></span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="players-count">
+                    <div class="game-status">
                         <i class="fas fa-users"></i>
-                        <span>Игроков в комнате: <strong id="room-count">1</strong></span>
+                        <span>Ожидание других игроков...</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Экран игры -->
-        <section id="game-screen" class="screen">
+        <div class="screen" id="game-screen">
             <div class="game-header">
-                <div class="game-meta">
-                    <div class="question-number">
-                        Вопрос <span id="current-q">1</span>/<span id="total-q">10</span>
+                <div class="game-info">
+                    <div class="question-counter">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Вопрос <span id="current-q">1</span>/<span id="total-q">10</span></span>
                     </div>
-                    <div class="game-timer">
+                    
+                    <div class="timer-box">
                         <i class="fas fa-clock"></i>
-                        <span id="timer">30</span>с
+                        <span id="timer">30</span>
                     </div>
                 </div>
                 
-                <div class="player-score">
-                    <i class="fas fa-star"></i>
-                    <span id="score">0</span> очков
+                <div class="player-stats">
+                    <div class="score">
+                        <i class="fas fa-star"></i>
+                        <span id="score">0</span>
+                    </div>
+                    <div class="player-name-display" id="player-name-display">
+                        <!-- Имя игрока -->
+                    </div>
                 </div>
             </div>
 
@@ -101,26 +117,26 @@
                 </div>
                 
                 <h2 class="question-text" id="question-text">
-                    Какой стиль используется в научных статьях и учебниках?
+                    Вопрос появится здесь
                 </h2>
                 
                 <div class="question-hint" id="question-hint">
                     <i class="fas fa-lightbulb"></i>
-                    <span>Подсказка появится здесь</span>
+                    <span>Подсказка будет здесь</span>
                 </div>
             </div>
 
-            <div class="options-list" id="options-container">
-                <!-- Варианты ответов -->
+            <div class="options-container" id="options-container">
+                <!-- Варианты ответов появятся здесь -->
             </div>
             
-            <div class="answer-feedback" id="feedback">
-                <!-- Обратная связь -->
+            <div class="feedback" id="feedback">
+                <!-- Обратная связь появится здесь -->
             </div>
-        </section>
+        </div>
 
         <!-- Экран результата -->
-        <section id="result-screen" class="screen">
+        <div class="screen" id="result-screen">
             <div class="result-card">
                 <div class="result-header">
                     <h2><i class="fas fa-poll"></i> Ваш ответ</h2>
@@ -128,28 +144,30 @@
                 
                 <div class="result-content">
                     <div class="answer-result" id="answer-result">
-                        <!-- Результат ответа -->
+                        <!-- Результат появится здесь -->
                     </div>
                     
-                    <div class="score-update">
-                        <div class="score-change" id="score-change">
-                            +250 очков
+                    <div class="score-info">
+                        <div class="points-earned" id="points-earned">
+                            +0 очков
                         </div>
                         <div class="total-score">
                             Всего: <strong id="total-score">0</strong> очков
                         </div>
                     </div>
                     
-                    <div class="next-waiting">
-                        <i class="fas fa-hourglass-half"></i>
+                    <div class="waiting-next">
+                        <div class="spinner-small">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
                         <p>Ожидайте следующий вопрос...</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Финальный экран -->
-        <section id="final-screen" class="screen">
+        <div class="screen" id="final-screen">
             <div class="final-card">
                 <div class="final-header">
                     <div class="trophy">
@@ -177,22 +195,38 @@
                 </div>
                 
                 <div class="final-leaderboard" id="final-leaderboard">
-                    <!-- Лидерборд -->
+                    <!-- Лидерборд появится здесь -->
                 </div>
                 
                 <div class="final-actions">
-                    <button class="btn btn-primary" id="play-again">
+                    <button class="btn btn-primary" id="play-again-btn">
                         <i class="fas fa-redo"></i> Играть еще
                     </button>
-                    <button class="btn btn-secondary" id="new-game">
+                    <button class="btn btn-secondary" id="home-btn">
                         <i class="fas fa-home"></i> На главную
                     </button>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 
     <script src="firebase-config.js"></script>
     <script src="student.js"></script>
+    
+    <script>
+        // Автозаполнение для тестирования
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameCodeInput = document.getElementById('game-code');
+            const playerNameInput = document.getElementById('player-name');
+            
+            // Автозаполнение для теста
+            gameCodeInput.value = '1234';
+            playerNameInput.value = 'Ученик' + Math.floor(Math.random() * 100);
+            
+            // Фокус на поле имени
+            playerNameInput.focus();
+            playerNameInput.select();
+        });
+    </script>
 </body>
 </html>
